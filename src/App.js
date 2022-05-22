@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import Robot from './components/Robot';
+import Searchbox from './components/Searchbox';
+import { robots } from './data/robots';
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredList, setFilteredList] = useState(robots);
+
+  const handleChange = (value) => {
+    setSearchQuery(value);
+    setFilteredList(
+      robots.filter(
+        (robot) =>
+          robot.name.toLowerCase().includes(value.toLowerCase()) ||
+          robot.username.toLowerCase().includes(value.toLowerCase()) ||
+          robot.email.toLowerCase().includes(value.toLowerCase())
+      )
+    );
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container'>
+      <h1>ST Technical Interview</h1>
+      <Searchbox value={searchQuery} handleChange={handleChange} />
+      {filteredList.map((robot) => (
+        <Robot key={robot.id} robot={robot} />
+      ))}
     </div>
   );
 }
